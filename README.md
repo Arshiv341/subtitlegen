@@ -1,205 +1,673 @@
-# VideoText — AI-Powered Video-to-Text Transcription Platform
+from pathlib import Path
 
-VideoText is a full-stack web application designed for converting video files into synchronized, searchable, and editable transcripts. Built with a clean, professional, typography-focused white SaaS aesthetic, it extracts audio using FFmpeg, converts spoken speech into text using Whisper providers (Groq Cloud API, OpenAI Whisper API, or an offline development provider), and provides timestamp-seeking playback and multi-format exports.
+readme = r'''# SubtitleGen
 
----
+> **Turn videos into accurate, timestamped subtitles with AI.**
 
-## 1. Key Features
+SubtitleGen is a full-stack AI-powered video transcription and subtitle generation platform that converts spoken audio from uploaded videos into searchable, editable, and timestamp-synchronized text.
 
-- **White Minimalist SaaS Design**: Pure `#FFFFFF` background, `#111111` typography, `#E5E5E5` subtle borders, no dark mode, no AI-generated gradients or card clutter.
-- **FFmpeg Audio Extraction**: Automatically extracts 16kHz mono audio from uploaded videos using bundled FFmpeg binaries (`@ffmpeg-installer/ffmpeg` and `@ffprobe-installer/ffprobe`).
-- **Pluggable Speech-to-Text Architecture**:
-  - **Groq Whisper** (`whisper-large-v3`): Ultra-fast speech inference with word/segment timestamps.
-  - **OpenAI Whisper** (`whisper-1`): Standard Whisper API integration.
-  - **Offline/Mock Provider**: Generates realistic timestamped segments for zero-setup local development without requiring an API key.
-- **Interactive Transcript Workspace**:
-  - **Click-to-Seek**: Clicking any segment timestamp jumps the video player directly to that second.
-  - **Active Segment Highlighting**: Synchronously highlights the currently playing segment as the video progresses.
-  - **Search & Filter**: Real-time search with match counter (`X of Y results`), query highlighting, and Next/Previous navigation buttons.
-  - **Inline Segment Editing**: Edit segment text and save changes immediately with persistent `PATCH` updates.
-  - **Multi-Format Export**: One-click downloads for **TXT**, **SRT** (SubRip captions), **PDF** (printable report via PDFKit), and **DOCX** (Microsoft Word document).
-- **History & Management**: `/transcriptions` dashboard displaying video metadata, duration, status badges, direct links, and delete actions.
-- **Resilient Fallback Storage**: Automatically connects to MongoDB if `MONGODB_URI` is reachable; seamlessly switches to an embedded JSON file repository if MongoDB is offline.
+The platform uses **FFmpeg** for audio extraction and a modular speech-to-text architecture with support for **Google Gemini Transcription, Groq Whisper, OpenAI Whisper, and an offline development provider**.
+
+Users can upload a video, generate a transcript, interact with synchronized subtitles, edit the generated text, search the transcript, and export subtitles or transcripts in multiple formats.
 
 ---
 
-## 2. Tech Stack
+## ✨ Features
 
-| Component | Technology | Description |
-|---|---|---|
-| **Frontend** | React 18 + Vite | Modular functional components, hooks, React Router |
-| **Styling** | Tailwind CSS | Strict white SaaS theme (`#FFFFFF`, `#111111`, `#E5E5E5`) |
-| **Icons** | Lucide React | Clean, functional iconography |
-| **Backend** | Node.js + Express | REST API, streaming uploads, static media server |
-| **Audio Processing** | FFmpeg / Fluent-FFmpeg | Audio extraction, sample rate conversion (16kHz mono) |
-| **Speech-to-Text** | Whisper (Groq / OpenAI) | Modular provider abstraction in `transcriptionService.js` |
-| **Database** | MongoDB / Local JSON Store | Mongoose with automatic fallback to JSON repository |
-| **Document Exports** | PDFKit & Docx | PDF report and Word document generators |
+### 🎥 Video-to-Text Transcription
 
----
+Upload a video and automatically convert its spoken content into text.
 
-## 3. Project Structure
+Supported video formats:
+
+- MP4
+- MOV
+- AVI
+- WEBM
+
+Processing pipeline:
 
 ```text
-videototext/
+Video Upload
+     ↓
+FFmpeg Audio Extraction
+     ↓
+Speech-to-Text
+     ↓
+Timestamped Transcript
+     ↓
+SubtitleGen Workspace
+     ↓
+Export
+```
+
+### 🤖 AI Speech Recognition
+
+Supported transcription providers:
+
+- **Google Gemini Transcription**
+- **Groq Whisper**
+- **OpenAI Whisper**
+- **Offline / Mock Provider** for local development
+
+The transcription provider is configured on the backend.
+
+### ⏱️ Timestamped Transcripts
+
+Every transcript is organized into timestamped segments.
+
+```text
+00:00:02
+Hello everyone.
+
+00:00:05
+Today we are going to learn JavaScript.
+
+00:00:11
+JavaScript is one of the most popular programming languages.
+```
+
+### ▶️ Synchronized Video & Transcript
+
+Clicking a transcript segment seeks the video to its corresponding timestamp.
+
+The currently playing transcript segment is highlighted automatically.
+
+### 🔎 Transcript Search
+
+Search the transcript in real time with:
+
+- Keyword search
+- Match count
+- Highlighted results
+- Next result
+- Previous result
+
+### ✏️ Inline Transcript Editing
+
+Edit generated transcript segments directly from the workspace.
+
+Changes are persisted through the backend API.
+
+### 📤 Multi-Format Export
+
+Export transcripts as:
+
+| Format | Description |
+|---|---|
+| TXT | Plain text transcript |
+| SRT | Standard subtitle/caption format |
+| PDF | Formatted transcript document |
+| DOCX | Editable Microsoft Word document |
+
+Example SRT:
+
+```text
+1
+00:00:02,000 --> 00:00:05,000
+Hello everyone.
+
+2
+00:00:05,000 --> 00:00:09,000
+Today we are going to learn JavaScript.
+```
+
+### 📚 Transcription History
+
+The `/transcriptions` page provides:
+
+- Video name
+- Duration
+- Processing status
+- Creation date
+- Open transcript
+- Export
+- Delete
+
+### ⚡ FFmpeg Processing
+
+SubtitleGen uses FFmpeg to extract optimized audio from uploaded videos.
+
+Audio is converted to:
+
+- 16 kHz
+- Mono
+- Optimized speech audio
+
+FFmpeg binaries are bundled through:
+
+- `@ffmpeg-installer/ffmpeg`
+- `@ffprobe-installer/ffprobe`
+
+### 🗄️ Flexible Storage
+
+MongoDB is supported through Mongoose.
+
+For local development, the application can fall back to a local JSON repository when MongoDB is unavailable.
+
+---
+
+## 🎨 UI / UX
+
+SubtitleGen uses a clean, professional SaaS interface.
+
+Design principles:
+
+- Pure white background
+- Minimal visual noise
+- Typography-focused interface
+- Subtle borders
+- Restrained accent colors
+- Functional icons
+- Responsive layouts
+- Clear visual hierarchy
+
+Design system:
+
+| Element | Value |
+|---|---|
+| Background | `#FFFFFF` |
+| Primary Text | `#111111` |
+| Secondary Text | `#666666` |
+| Border | `#E5E5E5` |
+| Surface | `#F7F7F7` |
+
+The interface intentionally avoids:
+
+- Dark mode
+- Glassmorphism
+- Neon gradients
+- Glowing AI cards
+- Excessive animations
+- Unnecessary dashboards
+- Meaningless analytics cards
+- Excessive rounded containers
+- Decorative AI elements
+
+The goal is a professional productivity SaaS experience rather than an AI-generated UI template.
+
+---
+
+# 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 18 |
+| Build Tool | Vite |
+| Styling | Tailwind CSS |
+| Icons | Lucide React |
+| Routing | React Router |
+| Backend | Node.js |
+| API | Express.js |
+| Video Processing | FFmpeg |
+| Speech-to-Text | Gemini / Whisper |
+| Database | MongoDB / Local JSON |
+| ODM | Mongoose |
+| PDF Export | PDFKit |
+| DOCX Export | docx |
+| File Upload | Multer |
+| Language | JavaScript |
+
+---
+
+# 📁 Project Structure
+
+```text
+subtitlegen/
+│
 ├── client/
 │   ├── index.html
 │   ├── vite.config.js
 │   ├── tailwind.config.js
-│   ├── src/
-│   │   ├── main.jsx
-│   │   ├── App.jsx
-│   │   ├── index.css
-│   │   ├── components/
-│   │   │   ├── Navbar.jsx
-│   │   │   ├── UploadZone.jsx
-│   │   │   ├── VideoPreview.jsx
-│   │   │   ├── VideoPlayer.jsx
-│   │   │   ├── ProcessingState.jsx
-│   │   │   ├── TranscriptViewer.jsx
-│   │   │   ├── TranscriptSegment.jsx
-│   │   │   ├── TranscriptSearch.jsx
-│   │   │   ├── ExportMenu.jsx
-│   │   │   ├── StatusBadge.jsx
-│   │   │   └── EmptyState.jsx
-│   │   ├── pages/
-│   │   │   ├── Home.jsx
-│   │   │   ├── Transcriptions.jsx
-│   │   │   ├── TranscriptDetail.jsx
-│   │   │   └── Settings.jsx
-│   │   ├── services/
-│   │   │   └── api.js
-│   │   └── utils/
-│   │       └── formatters.js
+│   │
+│   └── src/
+│       ├── main.jsx
+│       ├── App.jsx
+│       ├── index.css
+│       │
+│       ├── components/
+│       │   ├── Navbar.jsx
+│       │   ├── UploadZone.jsx
+│       │   ├── VideoPreview.jsx
+│       │   ├── VideoPlayer.jsx
+│       │   ├── ProcessingState.jsx
+│       │   ├── TranscriptViewer.jsx
+│       │   ├── TranscriptSegment.jsx
+│       │   ├── TranscriptSearch.jsx
+│       │   ├── ExportMenu.jsx
+│       │   ├── StatusBadge.jsx
+│       │   └── EmptyState.jsx
+│       │
+│       ├── pages/
+│       │   ├── Home.jsx
+│       │   ├── Transcriptions.jsx
+│       │   ├── TranscriptDetail.jsx
+│       │   └── Settings.jsx
+│       │
+│       ├── services/
+│       │   └── api.js
+│       │
+│       └── utils/
+│           └── formatters.js
+│
 ├── server/
 │   ├── server.js
-│   ├── .env
+│   │
 │   ├── config/
 │   │   ├── config.js
 │   │   └── database.js
+│   │
 │   ├── controllers/
 │   │   ├── transcriptionController.js
 │   │   └── settingsController.js
+│   │
 │   ├── middleware/
 │   │   ├── uploadMiddleware.js
 │   │   └── errorMiddleware.js
+│   │
 │   ├── models/
 │   │   └── Transcription.js
+│   │
 │   ├── providers/
 │   │   ├── baseProvider.js
+│   │   ├── geminiProvider.js
 │   │   ├── groqWhisperProvider.js
 │   │   ├── openAiWhisperProvider.js
 │   │   └── mockProvider.js
+│   │
 │   ├── routes/
 │   │   ├── transcriptionRoutes.js
 │   │   └── settingsRoutes.js
+│   │
 │   ├── services/
 │   │   ├── audioService.js
 │   │   ├── transcriptionService.js
 │   │   ├── exportService.js
 │   │   └── storageService.js
+│   │
 │   └── utils/
 │       ├── ffmpeg.js
 │       └── timeFormat.js
-└── uploads/
-    ├── videos/
-    ├── audio/
-    └── exports/
+│
+├── uploads/
+│   ├── videos/
+│   ├── audio/
+│   └── exports/
+│
+├── .env.example
+├── .gitignore
+├── package.json
+└── README.md
 ```
 
 ---
 
-## 4. Setup & Running Locally
+# 🚀 Getting Started
 
-### Prerequisites
-- Node.js (v18+)
-- npm (v9+)
-- *(Optional)* MongoDB (if not running, the app automatically uses local file storage in `server/data/transcriptions.json`)
+## Prerequisites
 
-### Installation
+- Node.js 18+
+- npm 9+
+- Git
 
-From the project root directory:
+MongoDB is optional for local development if the JSON fallback repository is enabled.
+
+## 1. Clone the Repository
 
 ```bash
-# Install root dependencies
-npm install
-
-# Install server dependencies
-cd server
-npm install
-
-# Install client dependencies
-cd ../client
-npm install
+git clone https://github.com/YOUR_USERNAME/subtitlegen.git
+cd subtitlegen
 ```
 
-### Running the Application
-
-You can start both backend and frontend concurrently:
+## 2. Install Dependencies
 
 ```bash
-# From root directory
+npm install
+cd server && npm install
+cd ../client && npm install
+cd ..
+```
+
+## 3. Environment Configuration
+
+Create:
+
+```text
+server/.env
+```
+
+Example:
+
+```env
+PORT=5000
+
+MONGODB_URI=
+
+TRANSCRIPTION_PROVIDER=gemini
+
+GEMINI_API_KEY=your_gemini_api_key_here
+```
+
+---
+
+# 🔐 API Key Security
+
+SubtitleGen uses a **server-side API credential architecture**.
+
+End users are **never asked to provide their own Gemini, Groq, or OpenAI API key**.
+
+The API key is stored only on the backend:
+
+```text
+server/.env
+```
+
+The browser never receives the secret.
+
+Architecture:
+
+```text
+React Frontend
+      ↓
+Express Backend
+      ↓
+Private Server API Key
+      ↓
+Gemini / Whisper API
+```
+
+Never commit `server/.env` to GitHub.
+
+---
+
+# 🤖 Transcription Providers
+
+## Google Gemini
+
+```env
+TRANSCRIPTION_PROVIDER=gemini
+GEMINI_API_KEY=your_api_key
+```
+
+The Gemini provider runs entirely on the backend.
+
+## Groq Whisper
+
+```env
+TRANSCRIPTION_PROVIDER=whisper-groq
+GROQ_API_KEY=your_api_key
+```
+
+## OpenAI Whisper
+
+```env
+TRANSCRIPTION_PROVIDER=whisper-openai
+OPENAI_API_KEY=your_api_key
+```
+
+## Offline / Mock Provider
+
+```env
+TRANSCRIPTION_PROVIDER=mock
+```
+
+The mock provider is intended only for development/testing. It does not perform real speech recognition.
+
+---
+
+# ▶️ Running the Application
+
+## Development Mode
+
+From the project root:
+
+```bash
 npm run dev
 ```
 
-Or run them in separate terminals:
+Frontend:
+
+```text
+http://localhost:5173
+```
+
+Backend:
+
+```text
+http://localhost:5000
+```
+
+## Run Frontend Separately
 
 ```bash
-# Terminal 1 - Backend Server (Port 5000)
-cd server
-npm run dev
-
-# Terminal 2 - Frontend Client (Port 5173)
 cd client
 npm run dev
 ```
 
-Visit the application in your browser:
-**`http://localhost:5173`**
+## Run Backend Separately
 
----
-
-## 5. Backend Transcription Credentials (SaaS Configuration)
-
-As a SaaS platform, all transcription API credentials are maintained exclusively on the backend by the application owner. End users are never prompted for credentials and the client browser never receives secret keys.
-
-Configure the server's environment in `server/.env`:
-
-```env
-# Speech-to-Text Engine
-TRANSCRIPTION_PROVIDER=gemini
-
-# Server-side secret. Never expose this to the React frontend.
-GEMINI_API_KEY=your_gemini_api_key_here
+```bash
+cd server
+npm run dev
 ```
 
-### Supported Engines:
-- **Google Gemini** (`gemini`): Uses dedicated `gemini-3.5-transcribe` with Google Files API and Interactions API.
-- **Groq Whisper** (`whisper-groq`): High-speed Whisper inference via Groq Cloud (`whisper-large-v3`).
-- **OpenAI Whisper** (`whisper-openai`): Standard OpenAI transcription (`whisper-1`).
-- **Offline / Mock** (`mock`): Local dev/testing fallback.
-
-### Option C: Offline / Mock Provider (Default for Testing)
-- Works without any external network access or API keys.
-- Generates speech segments sized proportionally to the video duration for immediate UI testing.
-
 ---
 
-## 6. API Reference
+# 🔌 API Reference
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `POST` | `/api/transcriptions` | Upload video file (`multipart/form-data`) |
-| `POST` | `/api/transcriptions/:id/transcribe` | Trigger audio extraction and STT transcription |
-| `GET` | `/api/transcriptions` | List all previous transcription jobs |
-| `GET` | `/api/transcriptions/:id` | Get single transcription detail with segments |
-| `PATCH` | `/api/transcriptions/:id` | Update title or transcript segments |
-| `DELETE` | `/api/transcriptions/:id` | Delete transcription and remove media files from disk |
-| `GET` | `/api/transcriptions/:id/export?format=txt` | Download plain text transcript |
-| `GET` | `/api/transcriptions/:id/export?format=srt` | Download SubRip `.srt` subtitle file |
-| `GET` | `/api/transcriptions/:id/export?format=pdf` | Download formatted `.pdf` document |
-| `GET` | `/api/transcriptions/:id/export?format=docx` | Download editable Microsoft Word `.docx` file |
-| `GET` | `/api/settings` | Get current provider configuration and environment status |
-| `POST` | `/api/settings` | Update active provider or API keys at runtime |
-#   s u b t i t l e g e n  
- 
+| `POST` | `/api/transcriptions` | Upload video |
+| `POST` | `/api/transcriptions/:id/transcribe` | Start transcription |
+| `GET` | `/api/transcriptions` | List transcriptions |
+| `GET` | `/api/transcriptions/:id` | Get transcript |
+| `PATCH` | `/api/transcriptions/:id` | Update transcript |
+| `DELETE` | `/api/transcriptions/:id` | Delete transcription |
+| `GET` | `/api/transcriptions/:id/export?format=txt` | Export TXT |
+| `GET` | `/api/transcriptions/:id/export?format=srt` | Export SRT |
+| `GET` | `/api/transcriptions/:id/export?format=pdf` | Export PDF |
+| `GET` | `/api/transcriptions/:id/export?format=docx` | Export DOCX |
+| `GET` | `/api/settings` | Get safe application status |
+
+API keys must never be returned through the Settings API.
+
+---
+
+# 🧠 Transcription Architecture
+
+SubtitleGen uses a provider abstraction so the speech-to-text engine can be changed without rewriting the frontend.
+
+```text
+                    Audio
+                      │
+                      ↓
+             transcriptionService
+                      │
+          ┌───────────┼───────────┐
+          ↓           ↓           ↓
+       Gemini       Groq        OpenAI
+     Transcribe    Whisper      Whisper
+          │           │           │
+          └───────────┼───────────┘
+                      ↓
+               Transcript JSON
+                      ↓
+                  Database
+                      ↓
+                  React UI
+```
+
+---
+
+# 📊 Transcript Data Structure
+
+```json
+{
+  "title": "JavaScript Lecture",
+  "originalFileName": "lecture.mp4",
+  "duration": 542,
+  "status": "completed",
+  "language": "en",
+  "transcript": [
+    {
+      "start": 2.0,
+      "end": 5.4,
+      "text": "Hello everyone."
+    },
+    {
+      "start": 5.4,
+      "end": 10.2,
+      "text": "Today we are going to learn JavaScript."
+    }
+  ]
+}
+```
+
+---
+
+# 🔄 Processing Pipeline
+
+```text
+┌─────────────────┐
+│   Upload Video  │
+└────────┬────────┘
+         ↓
+┌─────────────────┐
+│ Validate File   │
+└────────┬────────┘
+         ↓
+┌─────────────────┐
+│     FFmpeg      │
+│ Extract Audio   │
+└────────┬────────┘
+         ↓
+┌─────────────────┐
+│ Speech-to-Text  │
+│ Gemini /Whisper │
+└────────┬────────┘
+         ↓
+┌─────────────────┐
+│ Timestamped     │
+│ Transcript      │
+└────────┬────────┘
+         ↓
+┌─────────────────┐
+│ Store Result    │
+└────────┬────────┘
+         ↓
+┌─────────────────┐
+│ Transcript UI   │
+└────────┬────────┘
+         ↓
+┌─────────────────┐
+│ TXT / SRT /     │
+│ PDF / DOCX      │
+└─────────────────┘
+```
+
+---
+
+# 🧪 Testing Checklist
+
+- [ ] Video upload
+- [ ] File validation
+- [ ] Video preview
+- [ ] FFmpeg audio extraction
+- [ ] Real speech-to-text transcription
+- [ ] Timestamp generation
+- [ ] Transcript rendering
+- [ ] Video/transcript synchronization
+- [ ] Transcript search
+- [ ] Transcript editing
+- [ ] Persistent updates
+- [ ] TXT export
+- [ ] SRT export
+- [ ] PDF export
+- [ ] DOCX export
+- [ ] Transcription history
+- [ ] Delete functionality
+- [ ] Error handling
+- [ ] Mobile responsiveness
+- [ ] API key security
+
+---
+
+# 🛡️ Security
+
+SubtitleGen implements basic security practices:
+
+- API keys remain server-side
+- `.env` is excluded from Git
+- Uploaded filenames are sanitized
+- File types are validated
+- File sizes are validated
+- Generated filenames are unique
+- API errors are sanitized
+- Secrets are never returned through the Settings API
+
+For a public SaaS deployment, authentication, rate limiting, usage quotas, and cloud storage controls should also be implemented.
+
+---
+
+# 📌 Roadmap
+
+- [ ] User authentication
+- [ ] Speaker identification
+- [ ] Multi-language transcription
+- [ ] Automatic subtitle translation
+- [ ] Subtitle styling/customization
+- [ ] Burn subtitles directly into video
+- [ ] YouTube URL transcription
+- [ ] Large-video background processing
+- [ ] Cloud object storage
+- [ ] Redis/BullMQ job processing
+- [ ] Usage limits and subscription plans
+- [ ] Team/workspace support
+- [ ] AI-generated summaries
+- [ ] Chapter generation
+- [ ] Keyword extraction
+- [ ] Transcript-based Q&A
+- [ ] Real-time transcription
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome.
+
+```bash
+git checkout -b feature/your-feature
+git commit -m "feat: add your feature"
+git push origin feature/your-feature
+```
+
+Then open a Pull Request.
+
+---
+
+# 📄 License
+
+This project is licensed under the MIT License.
+
+See `LICENSE` for more information.
+
+---
+
+# ⭐ Support
+
+If SubtitleGen is useful to you, consider giving the repository a ⭐ on GitHub.
+
+---
+
+## SubtitleGen
+
+**Upload a video. Generate subtitles. Search, edit, sync and export.**
+
+Built with:
+
+**React · Node.js · Express · FFmpeg · Gemini · Whisper · MongoDB**
+'''
+
+path = Path("/mnt/data/README.md")
+path.write_text(readme, encoding="utf-8")
+print(f"Created: {path}")
