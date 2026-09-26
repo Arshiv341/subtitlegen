@@ -1,0 +1,169 @@
+[
+  {
+    "id": "77688fd1-77b1-47de-8525-0e8f731ff6dd",
+    "title": "Anshikaintro",
+    "originalFileName": "anshikaintro.mp4",
+    "videoPath": "D:\\videototext\\uploads\\videos\\1790414605489-44dbfc91-95e3-489e-bf80-9d598ecd9892.mp4",
+    "videoUrl": "/uploads/videos/1790414605489-44dbfc91-95e3-489e-bf80-9d598ecd9892.mp4",
+    "audioPath": "D:\\videototext\\uploads\\audio\\77688fd1-77b1-47de-8525-0e8f731ff6dd.mp3",
+    "fileSize": 17483913,
+    "duration": 89,
+    "status": "completed",
+    "processingStage": "completed",
+    "errorMessage": null,
+    "language": "auto",
+    "provider": "gemini",
+    "transcript": [
+      {
+        "start": 0.4,
+        "end": 3.4,
+        "text": "Hi, I'm Anshika Mishra, a fourth year B.Tech"
+      },
+      {
+        "start": 3.4,
+        "end": 6.4,
+        "text": "student in ABS at ABS Engineering College, Ghaziabad."
+      },
+      {
+        "start": 9.4,
+        "end": 11.8,
+        "text": "My main interest interest is in"
+      },
+      {
+        "start": 13.2,
+        "end": 15.4,
+        "text": "full stack full stack development."
+      },
+      {
+        "start": 15.4,
+        "end": 19.9,
+        "text": "I have worked on Spring Boot, React, Angular,"
+      },
+      {
+        "start": 19.9,
+        "end": 20.8,
+        "text": "and SQL."
+      },
+      {
+        "start": 22.8,
+        "end": 25.4,
+        "text": "One of my project is AI."
+      },
+      {
+        "start": 25.5,
+        "end": 30.1,
+        "text": "I I have worked on it and this"
+      },
+      {
+        "start": 30.8,
+        "end": 35.3,
+        "text": "it it analyzes it analyzes fraud detection and"
+      },
+      {
+        "start": 35.3,
+        "end": 36.8,
+        "text": "it recommends the"
+      },
+      {
+        "start": 38.1,
+        "end": 41.6,
+        "text": "what should be the next step after failure"
+      },
+      {
+        "start": 41.6,
+        "end": 42.4,
+        "text": "the payments."
+      },
+      {
+        "start": 43.2,
+        "end": 47.5,
+        "text": "And my my strength is I I am"
+      },
+      {
+        "start": 47.5,
+        "end": 48.7,
+        "text": "a hardworking person."
+      },
+      {
+        "start": 48.7,
+        "end": 51.5,
+        "text": "I give my 100% to complete any task."
+      },
+      {
+        "start": 52.1,
+        "end": 54,
+        "text": "And I am I am also a quick"
+      },
+      {
+        "start": 54,
+        "end": 54.5,
+        "text": "learner."
+      },
+      {
+        "start": 56.4,
+        "end": 59.7,
+        "text": "I I want to grab this opportunity opportunity"
+      },
+      {
+        "start": 59.7,
+        "end": 63.5,
+        "text": "at Nextway because I want to convert my"
+      },
+      {
+        "start": 64.1,
+        "end": 67.4,
+        "text": "theoretical skills in in in a practical skills"
+      },
+      {
+        "start": 67.5,
+        "end": 70.8,
+        "text": "and I want to learn from my colleagues"
+      },
+      {
+        "start": 71.2,
+        "end": 75.2,
+        "text": "and I want to I want to take"
+      },
+      {
+        "start": 75.2,
+        "end": 78.6,
+        "text": "this opportunity because I want to work I"
+      },
+      {
+        "start": 78.6,
+        "end": 80.8,
+        "text": "want to work in in a"
+      },
+      {
+        "start": 83.6,
+        "end": 87.2,
+        "text": "companies to enhance my skills."
+      },
+      {
+        "start": 88.2,
+        "end": 88.6,
+        "text": "Thank you."
+      }
+    ],
+    "createdAt": "2026-09-26T09:23:25.743Z",
+    "updatedAt": "2026-09-26T09:23:39.598Z"
+  },
+  {
+    "id": "04b8dda8-ddad-4a88-a834-cda393607805",
+    "title": "Anshikaintro",
+    "originalFileName": "anshikaintro.mp4",
+    "videoPath": "D:\\videototext\\uploads\\videos\\1790413505928-4e76e399-a64d-4359-b78e-ce1aabefd09c.mp4",
+    "videoUrl": "/uploads/videos/1790413505928-4e76e399-a64d-4359-b78e-ce1aabefd09c.mp4",
+    "audioPath": "D:\\videototext\\uploads\\audio\\04b8dda8-ddad-4a88-a834-cda393607805.mp3",
+    "fileSize": 17483913,
+    "duration": 89,
+    "status": "failed",
+    "processingStage": "failed",
+    "errorMessage": "We could not transcribe this video. Please try again.",
+    "language": "en",
+    "provider": "gemini",
+    "transcript": [],
+    "createdAt": "2026-09-26T09:05:06.311Z",
+    "updatedAt": "2026-09-26T09:05:52.084Z"
+  }
+]
